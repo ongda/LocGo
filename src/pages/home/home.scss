@@ -1,0 +1,11 @@
+page-home {
+  .gradient{
+    background: linear-gradient(to bottom,  map-get($colors, light) 0%, map-get($colors, secondary) 100%);
+  }
+
+  #map{
+    height: 100%;
+    width: 100%;
+  }
+
+}

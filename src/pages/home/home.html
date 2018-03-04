@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>LocGo</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-fab right bottom>
+      <button ion-fab mini color="primary" (click)="reCenter() "><ion-icon name="apps"></ion-icon></button>
+      <button ion-fab mini color="primary" (click)="goTo() "><ion-icon name="search"></ion-icon></button>
+  </ion-fab>
+<!--
+  <h2>This page would be holding the Map!</h2>
+  <p>
+    Sammie's Code will go here C:
+  </p>
+
+  <h3>First View: </h3>
+  <p>
+     UWM Campus Overlay on Google Map. A dot/icon will represent the user's current position
+    User clicks on Building they need to get to (or they can use search bar): Building Name Required, Room Number is optional
+    Routing happens, user will follow Google Map Direction API to get to the Building
+  </p>
+  <h3>Second View: </h3>
+  <p>
+    When user gets to a Building, we re-populate this area with Blueprint overly on Google Map
+    User has ability to go back to First View and choose to go to a new Building (if they so desire)
+    User has access (via Tabs, Bottom navigation bar) to show additional map features at any time
+
+  </p>
+-->
+
+<!-- THIS IS ONLY TEST CODE TO SHOW FDB is talking to IONIC -->
+<!--
+<ion-list>
+  <ion-item *ngFor="let path of paths | async">
+    <h2>LAT, LNG: {{path.coord}}</h2>
+    <h3>Left Neighbor: {{path.left_n}}</h3>
+    <h3>Right Neighbor: {{path.right_n}}</h3>
+  </ion-item>
+</ion-list>
+-->
+<div #map id="map"></div>
+</ion-content>

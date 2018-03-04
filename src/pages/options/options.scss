@@ -1,0 +1,17 @@
+page-options {
+  .page-label{
+    margin-left: 10px;
+    color: map-get($colors, primary);
+  }
+  .gradient{
+    background: linear-gradient(to bottom,  map-get($colors, light) 0%, map-get($colors, secondary) 100%);
+  }
+  .col-width{
+    width: 150px;
+    padding: 0px !important;
+  }
+  .visible{
+    background:transparent;
+  }
+
+}

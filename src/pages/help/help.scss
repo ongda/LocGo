@@ -1,0 +1,9 @@
+page-help {
+
+  .gradient{
+    background: linear-gradient(to bottom,  map-get($colors, light) 0%, map-get($colors, secondary) 100%);
+  }
+
+  ion-slides .swiper-pagination { @extend .swiper-pagination-white }
+
+}
