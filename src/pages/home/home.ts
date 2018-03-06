@@ -135,7 +135,24 @@ export class HomePage {
           strokeWeight: 2
       });
 
+//Polyline in Hallway 200C
+      let pathCoordinates2 = [
+          { lat: 43.075887, lng: -87.881091 },//10
+          { lat: 43.075887, lng: -87.881197 },//17
+          { lat: 43.075887, lng: -87.881229 },//18
+          { lat: 43.075887, lng: -87.881346 },//19
+          { lat: 43.075887, lng: -87.881374 }//20
+      ];
+      let myPath2 = new google.maps.Polyline({
+          path: pathCoordinates2,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+      });
+
       myPath.setMap(myMap);
+      myPath2.setMap(myMap);
 
       for (var cr of pathCoordinates){
         console.log(cr);
