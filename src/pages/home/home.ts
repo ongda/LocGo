@@ -78,7 +78,7 @@ export class HomePage {
               );
               let y = coord.y;
               let x = coord.x >= 0 ? coord.x : z2 + coord.x
-              console.log(zoom + "/" + x + "/" + y + ".png");
+              //console.log(zoom + "/" + x + "/" + y + ".png");
               if (mapBounds.intersects(tileBounds) && (mapMinZoom <= zoom) && (zoom <= mapMaxZoom))
                   return "../../../assets/tiles/" + zoom + "/" + x + "/" + y + ".png";
               else
@@ -113,11 +113,19 @@ export class HomePage {
 //
 
       let pathCoordinates = [
-          { lat: 43.075590, lng: -87.881511 },
-          { lat: 43.075670, lng: -87.881485 },
-          { lat: 43.075670, lng: -87.881085 },
-          { lat: 43.076309, lng: -87.881085 },
-          { lat: 43.076397, lng: -87.880976 }
+          { lat: 43.076331, lng: -87.881091 },//node1
+          { lat: 43.076305, lng: -87.881091 },//node2
+          { lat: 43.076274, lng: -87.881091 },//node3
+          { lat: 43.076221, lng: -87.881091 },//node4
+          { lat: 43.076160, lng: -87.881091 },//node5
+          { lat: 43.076102, lng: -87.881091 },//node6
+          { lat: 43.076033, lng: -87.881091 },//node7
+          { lat: 43.076000, lng: -87.881091 },//node8
+          { lat: 43.075946, lng: -87.881091 },//9
+          { lat: 43.075880, lng: -87.881091 },//10
+          { lat: 43.075862, lng: -87.881091 },//11
+          { lat: 43.075804, lng: -87.881091 },//12
+          { lat: 43.075777, lng: -87.881091 }//13
       ];
       let myPath = new google.maps.Polyline({
           path: pathCoordinates,
@@ -129,6 +137,18 @@ export class HomePage {
 
       myPath.setMap(myMap);
 
+      for (var cr of pathCoordinates){
+        console.log(cr);
+        let circle = new google.maps.Circle({
+          strokeColor: '#0000ff',
+          strokeOpacity: .08,
+          fillColor: '#0000ff',
+          fillOpacity: .5,
+          map: myMap,
+          radius: .3,
+          center: cr
+        });
+      }
 
 
 
