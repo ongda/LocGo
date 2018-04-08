@@ -157,6 +157,14 @@ export class HomePage {
     myGraph.addEdgePair(n[10], n[11],195);
     myGraph.addEdgePair(n[11], n[12],89);
     myGraph.addEdgePair(n[12], n[13],114);
+    myGraph.addEdgePair(n[12], n[14],450);
+    myGraph.addEdgePair(n[14], n[15],114);
+
+    myGraph.addEdgePair(n[9], n[16],200);
+    myGraph.addEdgePair(n[16], n[17],77);
+    myGraph.addEdgePair(n[17], n[18],285);
+    myGraph.addEdgePair(n[18], n[19],70);
+
     // myGraph.addEdgePair(n[], n[],);
     // myGraph.addEdgePair(n[], n[],);
     // myGraph.addEdgePair(n[], n[],);
@@ -181,7 +189,29 @@ export class HomePage {
     const options = {
         edgeCost: e => e.data
     };
-    var path = dijkstra.shortestPath(n[0], n[4], options);
+    let source=n[13];
+    let dest=n[18];
+    var path = dijkstra.shortestPath(source,dest, options);
+    if (path != null)
+    {
+      let node;
+      //console.log(path[0].from);
+      let pathList=[];
+      for(var p of path){
+        node = p.from;
+        pathList.push(map2LatLong(node.data.x,node.data.y));
+      }
+      pathList.push(map2LatLong(dest.data.x,dest.data.y));
+      let myPath = new google.maps.Polyline({
+          path: pathList,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+      });
+      myPath.setMap(myMap);
+    }
+    //console.log(pathList);
     console.log(path.map(function (e) { return e.from.data.id; }).join());
 //
 //   draw polyline
@@ -250,7 +280,7 @@ export class HomePage {
           fillColor: '#ff00ff',
           fillOpacity: .5,
           map: myMap,
-          radius: .3,
+          radius:.25,
           title:node.data.id,
           center: map2LatLong(node.data.x,node.data.y)
         });
@@ -289,7 +319,7 @@ function map2LatLong(x:number,y:number)
 }
 
 function addInfoWindow(map,marker, message) {
-console.log(marker);
+//console.log(marker);
             var infoWindow = new google.maps.InfoWindow({
                 content: message
             });
