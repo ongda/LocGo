@@ -1,12 +1,23 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavController } from 'ionic-angular';
+//import * as jKstra from '../../../jKstra/jKstra.js';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+
 
 import { AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
-import { pmarker } from '../../models/pmarker/pmarker.interface'
+import { pmarker } from '../../models/pmarker/pmarker.interface';
+import jKstra  from '../../jKstra/jKstra';
+// import jKstra from "./jKstra";
+//import { Graph } from '../../jKstra/core/Graph';
+// //import Dijkstra  from './algos/Dijkstra';
+//
+// let myGraph = new jKstra.Graph();
+// let n = [];
 
 declare var google:any;
-
+//var jKstra=require('../../../jKstra');
+//constructor(private sqlite: SQLite) { }
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -79,8 +90,10 @@ export class HomePage {
               let y = coord.y;
               let x = coord.x >= 0 ? coord.x : z2 + coord.x
               //console.log(zoom + "/" + x + "/" + y + ".png");
-              if (mapBounds.intersects(tileBounds) && (mapMinZoom <= zoom) && (zoom <= mapMaxZoom))
-                  return "../../../assets/tiles/" + zoom + "/" + x + "/" + y + ".png";
+              if (mapBounds.intersects(tileBounds) && (mapMinZoom <= zoom) && (zoom <= mapMaxZoom)){
+                return "assets/tiles/" + zoom + "/" + x + "/" + y + ".png";
+            }
+
               else
                   return "https://www.maptiler.com/img/none.png";
           },
@@ -108,9 +121,75 @@ export class HomePage {
 //    map.setMapTypeId('roadmap');
     //this.map.overlayMapTypes.insertAt(0, maptiler);
 
+    let myGraph = new jKstra.Graph();
+    let n = [];
+    n.push(myGraph.addVertex({id:0,x:1196,y:280}));
+    n.push(myGraph.addVertex({id:1,x:1196,y:368}));
+    n.push(myGraph.addVertex({id:2,x:1196,y:473}));
+    n.push(myGraph.addVertex({id:3,x:1196,y:649}));
+    n.push(myGraph.addVertex({id:4,x:1196,y:854}));
+    n.push(myGraph.addVertex({id:5,x:1196,y:1048}));
+    n.push(myGraph.addVertex({id:6,x:1196,y:1277}));
+    n.push(myGraph.addVertex({id:7,x:1196,y:1390}));
+    n.push(myGraph.addVertex({id:8,x:1196,y:1570}));
+    n.push(myGraph.addVertex({id:9,x:1196,y:1800}));
+    n.push(myGraph.addVertex({id:10,x:1196,y:1850}));
+    n.push(myGraph.addVertex({id:11,x:1196,y:2045}));
+    n.push(myGraph.addVertex({id:12,x:1196,y:2134}));
+    n.push(myGraph.addVertex({id:13,x:1082,y:2134}));
+    n.push(myGraph.addVertex({id:14,x:1196,y:2507}));
+    n.push(myGraph.addVertex({id:15,x:1075,y:2769}));
+    n.push(myGraph.addVertex({id:16,x:937,y:1800}));
+    n.push(myGraph.addVertex({id:17,x:860,y:1800}));
+    n.push(myGraph.addVertex({id:18,x:575,y:1800}));
+    n.push(myGraph.addVertex({id:19,x:505,y:1800}));
+    //
+    myGraph.addEdgePair(n[0], n[1], 88);
+    myGraph.addEdgePair(n[1], n[2], 105);
+    myGraph.addEdgePair(n[2], n[3],176);
+    myGraph.addEdgePair(n[3], n[4],205);
+    myGraph.addEdgePair(n[4], n[5],194);
+    myGraph.addEdgePair(n[5], n[6],229);
+    myGraph.addEdgePair(n[6], n[7],113);
+    myGraph.addEdgePair(n[7], n[8],180);
+    myGraph.addEdgePair(n[8], n[9],230);
+    myGraph.addEdgePair(n[9], n[10],50);
+    myGraph.addEdgePair(n[10], n[11],195);
+    myGraph.addEdgePair(n[11], n[12],89);
+    myGraph.addEdgePair(n[12], n[13],114);
+    // myGraph.addEdgePair(n[], n[],);
+    // myGraph.addEdgePair(n[], n[],);
+    // myGraph.addEdgePair(n[], n[],);
+    // myGraph.addEdgePair(n[], n[],);
+    // myGraph.addEdgePair(n[], n[],);
+    // myGraph.addEdgePair(n[], n[],);
+    // myGraph.addEdgePair(n[0], n[2], 8);
+    // myGraph.addEdgePair(n[0], n[3], 16);
+    // myGraph.addEdgePair(n[1], n[3], 10);
+    // myGraph.addEdgePair(n[2], n[3], 7);
+    // myGraph.addEdgePair(n[3], n[4], 5);
+    // myGraph.addEdgePair(n[2], n[4], 4);
+    /* global jKstra */
+    // ////
+    var opt = { flagKey: '_dijkstra' };
+    var dijkstra = new jKstra.algos.Dijkstra(myGraph, opt);
+    //var dijkstra = new jKstra.algos.BidirectionalDijkstra(myGraph,opt);
+
+    const options = {
+        edgeCost: e => e.data
+    };
+    var path = dijkstra.shortestPath(n[0], n[4], options);
+    console.log(path.map(function (e) { return e.from.data.id; }).join());
+    // // => [9, 2, 10]
+    // //let a = 5;
+    // console.log('Done!');
+    //
+
 //
 //   draw polyline
 //
+      // let path = dijkstra.shortestPath(n[0],n[4],options);
+      // alert(path.map(function (e) { return e.data;}));
 
       let pathCoordinates = [
           { lat: 43.076331, lng: -87.881091 },//node1
@@ -151,22 +230,36 @@ export class HomePage {
           strokeWeight: 2
       });
 
-      myPath.setMap(myMap);
-      myPath2.setMap(myMap);
+      //myPath.setMap(myMap);
+      //myPath2.setMap(myMap);
 
-      for (var cr of pathCoordinates){
-        console.log(cr);
+      // for (var cr of pathCoordinates2){
+      //   //console.log(cr);
+      //   let circle = new google.maps.Circle({
+      //     strokeColor: '#0000ff',
+      //     strokeOpacity: .08,
+      //     fillColor: '#0000ff',
+      //     fillOpacity: .5,
+      //     map: myMap,
+      //     radius: .3,
+      //     center: cr
+      //   });
+      // }
+
+      for (var node of n){
         let circle = new google.maps.Circle({
           strokeColor: '#0000ff',
           strokeOpacity: .08,
-          fillColor: '#0000ff',
+          fillColor: '#ff00ff',
           fillOpacity: .5,
           map: myMap,
           radius: .3,
-          center: cr
+          title:node.data.id,
+          center: map2LatLong(node.data.x,node.data.y)
         });
+        
+//        console.log(circle.center);
       }
-
 
 
   //   google.maps.event.addListenerOnce(map,
@@ -177,12 +270,23 @@ export class HomePage {
   //   );
   }
 
+
   reCenter(){
     this.map.setCenter(new google.maps.LatLng(43.077040, -87.881529));
   }
 
-  goTo(){
+
+goTo(){
 
   }
 
+}
+
+function map2LatLong(x:number,y:number)
+{
+  let lat = -2.98778e-7*(y-2761)+43.075590;
+  let long = 4.09334e-7*(x-171)-87.881511;
+  //console.log({lat:lat,lng:long});
+  return {lat:lat,lng:long};
+  //return new google.maps.LatLng(lat,long);
 }
