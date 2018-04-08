@@ -8,15 +8,8 @@ import { AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 import { pmarker } from '../../models/pmarker/pmarker.interface';
 import jKstra  from '../../jKstra/jKstra';
-// import jKstra from "./jKstra";
-//import { Graph } from '../../jKstra/core/Graph';
-// //import Dijkstra  from './algos/Dijkstra';
-//
-// let myGraph = new jKstra.Graph();
-// let n = [];
 
 declare var google:any;
-//var jKstra=require('../../../jKstra');
 //constructor(private sqlite: SQLite) { }
 @Component({
   selector: 'page-home',
@@ -112,15 +105,13 @@ export class HomePage {
     let myMap = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
     myMap.addListener("projection_changed", function() {
-      //let a=0/0;
-      //alert("projection:"+myMap.getProjection());
-      //map.mapTypes.set('mymap',maptiler);
-      myMap.overlayMapTypes.insertAt(0, maptiler);
+    myMap.overlayMapTypes.insertAt(0, maptiler);
 
     });
-//    map.setMapTypeId('roadmap');
-    //this.map.overlayMapTypes.insertAt(0, maptiler);
 
+    // define nodes
+    // TODO read nodes information from database
+    //
     let myGraph = new jKstra.Graph();
     let n = [];
     n.push(myGraph.addVertex({id:0,x:1196,y:280}));
@@ -171,6 +162,9 @@ export class HomePage {
     // myGraph.addEdgePair(n[2], n[4], 4);
     /* global jKstra */
     // ////
+    //
+    //  Find the shortest path
+    //
     var opt = { flagKey: '_dijkstra' };
     var dijkstra = new jKstra.algos.Dijkstra(myGraph, opt);
     //var dijkstra = new jKstra.algos.BidirectionalDijkstra(myGraph,opt);
@@ -180,16 +174,9 @@ export class HomePage {
     };
     var path = dijkstra.shortestPath(n[0], n[4], options);
     console.log(path.map(function (e) { return e.from.data.id; }).join());
-    // // => [9, 2, 10]
-    // //let a = 5;
-    // console.log('Done!');
-    //
-
 //
 //   draw polyline
 //
-      // let path = dijkstra.shortestPath(n[0],n[4],options);
-      // alert(path.map(function (e) { return e.data;}));
 
       let pathCoordinates = [
           { lat: 43.076331, lng: -87.881091 },//node1
@@ -231,20 +218,6 @@ export class HomePage {
       });
 
       //myPath.setMap(myMap);
-      //myPath2.setMap(myMap);
-
-      // for (var cr of pathCoordinates2){
-      //   //console.log(cr);
-      //   let circle = new google.maps.Circle({
-      //     strokeColor: '#0000ff',
-      //     strokeOpacity: .08,
-      //     fillColor: '#0000ff',
-      //     fillOpacity: .5,
-      //     map: myMap,
-      //     radius: .3,
-      //     center: cr
-      //   });
-      // }
 
       for (var node of n){
         let circle = new google.maps.Circle({
@@ -257,7 +230,8 @@ export class HomePage {
           title:node.data.id,
           center: map2LatLong(node.data.x,node.data.y)
         });
-        
+        addInfoWindow(myMap,circle,'Hello');
+
 //        console.log(circle.center);
       }
 
@@ -290,3 +264,14 @@ function map2LatLong(x:number,y:number)
   return {lat:lat,lng:long};
   //return new google.maps.LatLng(lat,long);
 }
+
+function addInfoWindow(map,marker, message) {
+console.log(marker);
+            var infoWindow = new google.maps.InfoWindow({
+                content: message
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infoWindow.open(map, marker);
+            });
+        }
