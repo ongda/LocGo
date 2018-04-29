@@ -1,0 +1,28 @@
+<!--
+  Generated template for the BuildingsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<!--Header set up-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>Select a Building</ion-title>
+    <!--place Cancel button on right corner, front = leftt corner-->
+    <ion-buttons end>
+    <button ion-button (click)="closeModal()">Cancel<ion-icon name="exit" class="pad"></ion-icon></button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<!--Body set up: Select list + Search Bar utilizing modal-->
+<ion-content padding>
+  <ion-searchbar (ionInput)="getItems($event)" placeholder="Search for a Building" showCancelButton=true></ion-searchbar>
+  <ion-list text-wrap>
+    <!--add building list via go through array of building names-->
+    <button ion-item *ngFor="let item of items" (click)="itemSelected(item)" clear=true class=wrap-text text-wrap>
+      {{ item }}
+    </button>
+  </ion-list>
+
+</ion-content>

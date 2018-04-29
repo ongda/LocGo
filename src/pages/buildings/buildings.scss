@@ -1,0 +1,8 @@
+page-buildings {
+  .pad{ //for spacing of cancel button (text + icon)
+    padding-left: 5px;
+  }
+  .wrap-text { //allow text wrapping intstead of the auto ellipses ...
+    white-space:normal;
+  }
+}

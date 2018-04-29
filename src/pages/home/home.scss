@@ -8,4 +8,15 @@ page-home {
     width: 100%;
   }
 
+  .search-button{
+    position: absolute;
+  }
+  .full-width-select {
+    width: 100%;
+    max-width: 100%;
+  }
+  .wrap-text {
+    white-space:normal;
+    text-transform: none;
+  }
 }

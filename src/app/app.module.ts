@@ -15,6 +15,7 @@ import {AngularFireModule} from 'angularfire2';
 import {AngularFireDatabaseModule} from 'angularfire2/database';
 import {FIREBASE_CREDENTIALS} from './firebase.credentials';
 
+import {Geolocation} from '@ionic-native/geolocation'
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {FIREBASE_CREDENTIALS} from './firebase.credentials';
   providers: [
     StatusBar,
     SplashScreen,
+    Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { NavController, ModalController } from 'ionic-angular';
 //import * as jKstra from '../../../jKstra/jKstra.js';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
@@ -9,26 +9,27 @@ import { Observable } from 'rxjs/Observable';
 import { pmarker } from '../../models/pmarker/pmarker.interface';
 import jKstra  from '../../jKstra/jKstra';
 
-declare var google:any;
-// import jKstra from "./jKstra";
-//import { Graph } from '../../jKstra/core/Graph';
-// //import Dijkstra  from './algos/Dijkstra';
-//
-// let myGraph = new jKstra.Graph();
-// let n = [];
+import {Geolocation} from '@ionic-native/geolocation';
+import { BuildingsPage } from '../buildings/buildings';
 
 declare var google:any;
-//var jKstra=require('../../../jKstra');
-//constructor(private sqlite: SQLite) { }
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
 
+ destination="";
+
   @ViewChild('map') mapElement;
+  pos: any;
+  myMark: any;
+  marker=[];
+
   map: any;
   myMap: any;
+
   mapBounds: any;
   mapMinZoom: any;
   mapMaxZoom: any;
@@ -38,12 +39,18 @@ export class HomePage {
   paths:Observable<pmarker[]>;
 
 
-  constructor(public navCtrl: NavController, public fdb: AngularFireDatabase) {
+  constructor(public navCtrl: NavController, public modalCtrl: ModalController, public fdb: AngularFireDatabase, public geolocation: Geolocation) {
 
-//If user clicks on a building, use that input to point at that node
+    //TODO If user clicks on a building, use that input to point at that node
     this.dbRef = this.fdb.list('uwm/bolton/bolf1');
     this.paths = this.dbRef.valueChanges();
     //this.floorMarkersRef$.suscribe(x => console.log(x));
+
+    this.geolocation.getCurrentPosition().then((position) =>{
+      this.pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      console.log("GET initial position");
+    }).catch((error)=>{console.log("BAD!")});
+
   }
 
   ionViewDidLoad(){
@@ -52,6 +59,37 @@ export class HomePage {
 
 //map initial centering
   initMap(){
+  let defStyle =[
+    //turn all feats off first beacause JS doesn't have setIndoorEnabled(false) as of 3/7/2018
+  {"stylers": [{"visibility": "off"}]},
+  {
+    "featureType": "transit",
+    "stylers":[{"visibility": "on"},]
+  },
+  {
+    "featureType": "water",
+    "stylers":[{"visibility": "on"},]
+  },
+  {
+    "featureType":"administrative",
+    "stylers": [{"visibility": "on"}]
+  },
+  {
+    "featureType": "road",
+    "stylers":[{"visibility": "on"},]
+  },
+  {//needed for library outline to show up
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers":[{"visibility": "on"}]
+  },
+  {//add  {"color":"#ff0051"} to stylers to "flatten" roof
+    "featureType": "landscape",
+    "elementType": "geometry",
+    "stylers":[{"visibility": "on"}]
+  }
+];
+
     let latLng = new google.maps.LatLng(43.076, -87.8813);
 
      let mapBounds = new google.maps.LatLngBounds(
@@ -118,6 +156,13 @@ export class HomePage {
 
     });
 
+/*
+*  CODE commented below are hard face values & not from database.
+*  TODO Sammie and Iaong will have to have further conversations
+*       regarding WHAT is now needed in the DB and in what format to stare it
+*/
+
+/**************
     // define nodes
     // TODO read nodes information from database
     //
@@ -177,7 +222,7 @@ export class HomePage {
     // myGraph.addEdgePair(n[2], n[3], 7);
     // myGraph.addEdgePair(n[3], n[4], 5);
     // myGraph.addEdgePair(n[2], n[4], 4);
-    /* global jKstra */
+    // global jKstra //
     // ////
     //
     //  Find the shortest path
@@ -258,20 +303,6 @@ export class HomePage {
           strokeWeight: 2
       });
 
-      //myPath.setMap(myMap);
-
-      // for (var cr of pathCoordinates2){
-      //   //console.log(cr);
-      //   let circle = new google.maps.Circle({
-      //     strokeColor: '#0000ff',
-      //     strokeOpacity: .08,
-      //     fillColor: '#0000ff',
-      //     fillOpacity: .5,
-      //     map: myMap,
-      //     radius: .3,
-      //     center: cr
-      //   });
-      // }
 
       for (var node of n){
         let circle = new google.maps.Circle({
@@ -286,25 +317,53 @@ export class HomePage {
         });
         addInfoWindow(myMap,circle,'Hello');
       }
-//        console.log(circle.center);
-      }
+**************/
 
-  //   google.maps.event.addListenerOnce(map,
-  //     function(){
-  //       console.log('ttttt');
-  //       alert('hi');
-  //     }
-  //   );
-  //}
+//Create "user" marker -- id is set to 0
+this.myMark = new google.maps.Marker({
+  position: this.pos,
+  map: myMap,
+  id: 0,
+  icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        strokeColor: "#0a7777",
+        scale: 3
+    },
+});
+
+//Update "user" marker location
+this.geolocation.watchPosition().subscribe((position) => {
+  this.pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  console.log("WATCH & UPDATE position");
+  this.myMark.setPosition(this.pos);
+});
 
 
-  reCenter(){
-    this.map.setCenter(new google.maps.LatLng(43.077040, -87.881529));
+    //set global ref to map for ext. helper methods
+    this.map = myMap;
+}
+
+  goToMyPos(){
+      this.map.setCenter(this.pos);
   }
 
+  reCenter(){
+    //This is to be the "Campus Map View"
+    this.map.setCenter(new google.maps.LatLng(43.077040, -87.881529));
+    this.map.setZoom(15);
+  }
 
-goTo(){
+  goTo(button){
+    //Allows for input of desination currently
+    //TODO Will need to allow for input of source also
 
+    let destinationModal = this.modalCtrl.create('BuildingsPage');
+    destinationModal.onDidDismiss(data => {
+      //on modal close, retreive data  --- & set button text to it
+      if(data!=null)this.destination=data.toString();
+      console.log(this.destination);
+    });
+    destinationModal.present();
   }
 
 }
