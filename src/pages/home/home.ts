@@ -43,21 +43,21 @@ export class HomePage {
 
 
   constructor(public navCtrl: NavController, public modalCtrl: ModalController, public fdb: AngularFireDatabase, public geolocation: Geolocation, public alertCtrl: AlertController) {
-
-    //TODO If user clicks on a building, use that input to point at that node
-    //TODO this will require speaking to Database
-    this.dbRef = this.fdb.list('uwm/bolton/bolf1');
-    this.paths = this.dbRef.valueChanges();
-    //this.floorMarkersRef$.suscribe(x => console.log(x));
-
-    this.geolocation.getCurrentPosition().then((position) =>{
-      this.pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      console.log("GET initial position");
-    }).catch((error)=>{console.log("BAD!")});
+    
+        //TODO If user clicks on a building while on CAMPUS MAP View, use that input to point at that node
+        //TODO this will require speaking to Database <-- will need to be of SQLite
+        this.dbRef = this.fdb.list('uwm/bolton/bolf1');
+        this.paths = this.dbRef.valueChanges();
+        //this.floorMarkersRef$.suscribe(x => console.log(x));
 
   }
 
   ionViewDidLoad(){
+    this.geolocation.getCurrentPosition().then((position) =>{
+      this.pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      console.log("GET initial position");
+    }).catch((error)=>{console.log('Error getting location', error)});
+
     this.initMap();
   }
 
@@ -155,6 +155,28 @@ export class HomePage {
     myMap.overlayMapTypes.insertAt(0, maptiler);
 
     });
+
+
+    //Create "user" marker -- id is set to 0
+    this.myMark = new google.maps.Marker({
+      position: this.pos,
+      map: myMap,
+      id: 0,
+      icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            strokeColor: "#0a7777",
+            scale: 3
+        },
+    });
+
+    //Update "user" marker location
+    this.geolocation.watchPosition().subscribe((position) => {
+      this.pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      console.log("WATCH & UPDATE position");
+      this.myMark.setPosition(this.pos);
+    });
+
+
 
 /*
 *  CODE below are hard face values & not from database.
@@ -319,24 +341,7 @@ export class HomePage {
       }
 
 
-//Create "user" marker -- id is set to 0
-this.myMark = new google.maps.Marker({
-  position: this.pos,
-  map: myMap,
-  id: 0,
-  icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        strokeColor: "#0a7777",
-        scale: 3
-    },
-});
 
-//Update "user" marker location
-this.geolocation.watchPosition().subscribe((position) => {
-  this.pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  console.log("WATCH & UPDATE position");
-  this.myMark.setPosition(this.pos);
-});
 
 
     //set global ref to map for ext. helper methods
@@ -345,6 +350,7 @@ this.geolocation.watchPosition().subscribe((position) => {
 
   goToMyPos(){
       this.map.setCenter(this.pos);
+      this.map.setZoom(20);
 
       var toVerify;
 
