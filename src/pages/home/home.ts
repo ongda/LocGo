@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
 //import * as jKstra from '../../../jKstra/jKstra.js';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
@@ -39,7 +40,7 @@ export class HomePage {
   paths:Observable<pmarker[]>;
 
 
-  constructor(public navCtrl: NavController, public modalCtrl: ModalController, public fdb: AngularFireDatabase, public geolocation: Geolocation) {
+  constructor(public navCtrl: NavController, public modalCtrl: ModalController, public fdb: AngularFireDatabase, public geolocation: Geolocation, public alertCtrl: AlertController) {
 
     //TODO If user clicks on a building, use that input to point at that node
     this.dbRef = this.fdb.list('uwm/bolton/bolf1');
@@ -345,6 +346,40 @@ this.geolocation.watchPosition().subscribe((position) => {
 
   goToMyPos(){
       this.map.setCenter(this.pos);
+
+      //TODO This will need to speak to the database to let us bring up the relevant info to display on myMap
+
+      var toVerify;
+
+      let alert = this.alertCtrl.create({
+        title: 'What level are you on?',
+        message: 'Valid Inputs: B, G, number digits',
+        enableBackdropDismiss: false,
+        inputs: [
+          {
+            name: 'level',
+            placeholder: 'Specify floor level'
+          },
+        ],
+        buttons: [
+          {
+              text: 'OK',
+              handler: data => {
+                  console.log(JSON.stringify(data)); //to see the object
+                  toVerify = data.level.toString().trim();
+
+                  if( toVerify == "B" || toVerify == "b" || toVerify =="g" || toVerify == "G" || parseFloat(data.level) == toVerify){
+                    console.log("Valid input!");
+                  }
+                  else{
+                    //alert will not close unless it gets valid input
+                    return false;
+                  }
+              }
+          }
+        ],
+      });
+      alert.present();
   }
 
   reCenter(){
