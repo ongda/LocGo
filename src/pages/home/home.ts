@@ -147,9 +147,6 @@ export class HomePage {
       });
 
 
-
-
-    //this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     let myMap = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
     myMap.addListener("projection_changed", function() {
@@ -158,12 +155,12 @@ export class HomePage {
     });
 
 /*
-*  CODE commented below are hard face values & not from database.
-*  TODO Sammie and Iaong will have to have further conversations
-*       regarding WHAT is now needed in the DB and in what format to stare it
+*  CODE below are hard face values & not from database.
+*  TODO 4/29/18: Sammie needs SQLite for her algorithms. As of current, IaOng's codes are not fully dependent on Firebase.
+*  We can proceed with SQLite if Sammie is familiar with it to a good enough degree for May 1st Expo
 */
 
-/**************
+
     // define nodes
     // TODO read nodes information from database
     //
@@ -318,7 +315,7 @@ export class HomePage {
         });
         addInfoWindow(myMap,circle,'Hello');
       }
-**************/
+
 
 //Create "user" marker -- id is set to 0
 this.myMark = new google.maps.Marker({
