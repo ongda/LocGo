@@ -93,7 +93,7 @@ export class HomePage {
               let x = coord.x >= 0 ? coord.x : z2 + coord.x
               //console.log(zoom + "/" + x + "/" + y + ".png");
               if (mapBounds.intersects(tileBounds) && (mapMinZoom <= zoom) && (zoom <= mapMaxZoom)){
-                return "assets/tiles/" + zoom + "/" + x + "/" + y + ".png";
+                return "assets/tiles/" + zoom + "/" + x + "/" + y+ ".png";
             }
 
               else
