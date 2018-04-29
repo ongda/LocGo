@@ -1,13 +1,15 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
-//import * as jKstra from '../../../jKstra/jKstra.js';
+
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
-
+// TODO 4/29/18: Sammie needs SQLite for her algorithms. As of current, IaOng's codes are not fully dependent on Firebase.
+//  We can proceed with SQLite if Sammie is familiar with it to a good enough degree for May 1st Expo
 import { AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 import { pmarker } from '../../models/pmarker/pmarker.interface';
+
 import jKstra  from '../../jKstra/jKstra';
 
 import {Geolocation} from '@ionic-native/geolocation';
