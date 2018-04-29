@@ -347,8 +347,6 @@ this.geolocation.watchPosition().subscribe((position) => {
   goToMyPos(){
       this.map.setCenter(this.pos);
 
-      //TODO This will need to speak to the database to let us bring up the relevant info to display on myMap
-
       var toVerify;
 
       let alert = this.alertCtrl.create({
@@ -370,6 +368,7 @@ this.geolocation.watchPosition().subscribe((position) => {
 
                   if( toVerify == "B" || toVerify == "b" || toVerify =="g" || toVerify == "G" || parseFloat(data.level) == toVerify){
                     console.log("Valid input!");
+                    //TODO This will need to speak to the database to let us bring up the relevant info to display on myMap
                   }
                   else{
                     //alert will not close unless it gets valid input
