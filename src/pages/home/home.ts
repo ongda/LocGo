@@ -45,6 +45,7 @@ export class HomePage {
   constructor(public navCtrl: NavController, public modalCtrl: ModalController, public fdb: AngularFireDatabase, public geolocation: Geolocation, public alertCtrl: AlertController) {
 
     //TODO If user clicks on a building, use that input to point at that node
+    //TODO this will require speaking to Database
     this.dbRef = this.fdb.list('uwm/bolton/bolf1');
     this.paths = this.dbRef.valueChanges();
     //this.floorMarkersRef$.suscribe(x => console.log(x));
@@ -60,10 +61,11 @@ export class HomePage {
     this.initMap();
   }
 
-//map initial centering
+//map initial set up
   initMap(){
   let defStyle =[
     //turn all feats off first beacause JS doesn't have setIndoorEnabled(false) as of 3/7/2018
+    //TODO use the feats to make our map customized and visually appealing
   {"stylers": [{"visibility": "off"}]},
   {
     "featureType": "transit",
@@ -101,8 +103,6 @@ export class HomePage {
     let mapMinZoom = 18;
     let mapMaxZoom = 25;
 
-
-
     let mapOptions ={
       center: latLng,
       zoom: 19,
@@ -118,7 +118,7 @@ export class HomePage {
             position: google.maps.ControlPosition.LEFT_TOP
         }
     };
-    //let maptiler = new google.maps.ImageMapType({
+
     let maptiler = new google.maps.ImageMapType({
           getTileUrl: function (coord, zoom) {
 
@@ -388,7 +388,7 @@ this.geolocation.watchPosition().subscribe((position) => {
 
   goTo(button){
     //Allows for input of desination currently
-    //TODO Will need to allow for input of source also
+    //TODO this will require speaking to Database to set up map for user
 
     let destinationModal = this.modalCtrl.create('BuildingsPage');
     destinationModal.onDidDismiss(data => {
