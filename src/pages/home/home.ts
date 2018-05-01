@@ -1,15 +1,16 @@
+
 import { Component, ViewChild } from '@angular/core';
 import { NavController } from 'ionic-angular';
 //import * as jKstra from '../../../jKstra/jKstra.js';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { SQLitePorter } from '@ionic-native/sqlite-porter';
 
-
-import { AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 import { pmarker } from '../../models/pmarker/pmarker.interface';
 import jKstra  from '../../jKstra/jKstra';
 
 declare var google:any;
+
 // import jKstra from "./jKstra";
 //import { Graph } from '../../jKstra/core/Graph';
 // //import Dijkstra  from './algos/Dijkstra';
@@ -20,6 +21,7 @@ declare var google:any;
 declare var google:any;
 //var jKstra=require('../../../jKstra');
 //constructor(private sqlite: SQLite) { }
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -36,20 +38,41 @@ export class HomePage {
 
   dbRef:AngularFireList<any>;
   paths:Observable<pmarker[]>;
+// constructor(private sqlitePorter: SQLitePorter) { }
 
-
-  constructor(public navCtrl: NavController, public fdb: AngularFireDatabase) {
-
-//If user clicks on a building, use that input to point at that node
-    this.dbRef = this.fdb.list('uwm/bolton/bolf1');
-    this.paths = this.dbRef.valueChanges();
-    //this.floorMarkersRef$.suscribe(x => console.log(x));
-  }
+//   constructor(public navCtrl: NavController, public fdb: AngularFireDatabase) {
+//
+// //If user clicks on a building, use that input to point at that node
+//     this.dbRef = this.fdb.list('uwm/bolton/bolf1');
+//     this.paths = this.dbRef.valueChanges();
+//     //this.floorMarkersRef$.suscribe(x => console.log(x));
+//   }
 
   ionViewDidLoad(){
+    this.CreateDataBase();
     this.initMap();
   }
 
+CreateDataBase(){
+//Create a new database:
+let shortName = 'locGo';
+let version = '1.0';
+let displayName = 'My Buldings Database';
+let maxSize = 65536; // in bytes
+//let db = openDatabase(shortName, version, displayName, maxSize);
+//let sql = 'CREATE TABLE Artist ([Id] PRIMARY KEY, [Title]);' +
+//           'INSERT INTO Artist(Id,Title) VALUES ("1","Fred");';
+
+// let sql = 'CREATE TABLE IF NOT EXISTS Rooms (' +
+// 	'[id]	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,' +
+// 	'[name]	TEXT NOT NULL,' +
+// 	'[Floor_id] INTEGER NOT NULL,' +
+// 	'[Node_id]	INTEGER NOT NULL);'
+//       // You should have a database instance in db.
+// this.sqlitePorter.importSqlToDb(db, sql)
+//   .then(() => console.log('Imported'))
+//   .catch(e => console.error(e));
+}
 //map initial centering
   initMap(){
     let latLng = new google.maps.LatLng(43.076, -87.8813);
@@ -93,7 +116,7 @@ export class HomePage {
               let x = coord.x >= 0 ? coord.x : z2 + coord.x
               //console.log(zoom + "/" + x + "/" + y + ".png");
               if (mapBounds.intersects(tileBounds) && (mapMinZoom <= zoom) && (zoom <= mapMaxZoom)){
-                return "assets/tiles/" + zoom + "/" + x + "/" + y+ ".png";
+                return "assets/tiles/Bolton_1/" + zoom + "/" + x + "/" + y+ ".png";
             }
 
               else
